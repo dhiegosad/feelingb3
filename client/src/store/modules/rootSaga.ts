@@ -1,7 +1,7 @@
 import { all, takeLatest } from 'redux-saga/effects';
 
-import Home from './Home/sagas';
+import twitter from './twitter/sagas';
 
 export default function* rootSaga() {
-  return yield all([Home]);
+  return yield all([twitter]);
 }

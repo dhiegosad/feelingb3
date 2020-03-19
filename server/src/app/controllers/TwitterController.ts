@@ -3,15 +3,32 @@ import googleNL from '../services/googleNL';
 import { IncomingMessage } from 'http';
 import { Request, Response } from 'express';
 
+interface ITwitters {
+  statuses: ITwitterStatuses[];
+}
+
+interface ITwitterStatuses {
+  text: string;
+}
+
+const getTwitters = async (key: string, callback: Function) => {
+  console.log('AKIIII');
+  await twitterAuth.oauth.get(
+    twitterAuth.buildSearchUrl(key, 'recent'),
+    twitterAuth.access_token_key,
+    twitterAuth.access_token_secret,
+    callback
+  );
+};
+const callbackTwitterResponse = () => {};
+
 class TwitterController {
   async request(req: Request, res: Response) {
     const { key } = req.params;
 
-    twitterAuth.oauth.get(
-      twitterAuth.buildSearchUrl(key, 'recent'),
-      twitterAuth.access_token_key,
-      twitterAuth.access_token_secret,
-      function(error: object, data: string, response: IncomingMessage) {
+    await getTwitters(
+      key,
+      (error: object, data: string, response: IncomingMessage) => {
         if (error) res.status(400).json({ error: 'Error Twitter Api' });
         res.status(200).json(JSON.parse(data));
       }
@@ -19,27 +36,52 @@ class TwitterController {
   }
 
   async analyze(req: Request, res: Response) {
-    console.log('AKIII');
-    // The text to analyze
-    const text = 'Minha maior paixão é o Vasco da Gama';
+    const { key } = req.params;
 
-    const document = {
-      content: text,
-      type: 'PLAIN_TEXT',
-    };
+    let twitters: ITwitters;
+    var sentiments: Array<string> = [];
 
-    // Detects the sentiment of the text
-    const [result] = await googleNL.client.analyzeSentiment({
-      document: document,
-    });
-    const sentiment = result.documentSentiment;
+    await getTwitters(
+      key,
+      (error: object, data: string, response: IncomingMessage) => {
+        console.log('1');
+        if (error) res.status(400).json({ error: 'Error Twitter Api' });
+        twitters = JSON.parse(data);
+        console.log('2');
 
-    res.status(200).json(sentiment);
+        twitters?.statuses.forEach(async twitter => {
+          const document = {
+            content: twitter.text,
+            type: 'PLAIN_TEXT',
+          };
+          //console.log('document', document);
 
-    console.log(`Text: ${text}`);
-    console.log(`Sentiment: ${sentiment}`);
-    console.log(`Sentiment score: ${sentiment.score}`);
-    console.log(`Sentiment magnitude: ${sentiment.magnitude}`);
+          // Detects the sentiment of the text
+          const [result] = await googleNL.client.analyzeSentiment({
+            document: document,
+          });
+
+          //console.log('result', result);
+
+          sentiments.push(result.sentiment);
+
+          //console.log('sentiments', sentiments);
+        });
+        console.log('sentiments', sentiments);
+      }
+    );
+
+    console.log('twitters 2', twitters);
+
+    //   sentiments.push(result.sentiment);
+    // });
+
+    // console.log('sentiments', sentiments);
+    // res.status(200).json(sentiments);
+
+    //console.log(`Text: ${text}`);
+    //console.log(`Sentiment score: ${sentiment.score}`);
+    //console.log(`Sentiment magnitude: ${sentiment.magnitude}`);
   }
 }
 

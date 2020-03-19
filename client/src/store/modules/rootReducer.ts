@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 
-import home from '../modules/Home/reducer';
+import twitter from '../modules/twitter/reducer';
 
 export default combineReducers({
-  home,
+  twitter,
 });
