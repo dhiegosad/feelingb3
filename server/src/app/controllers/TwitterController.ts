@@ -12,7 +12,6 @@ interface ITwitterStatuses {
 }
 
 const getTwitters = async (key: string, callback: Function) => {
-  console.log('AKIIII');
   await twitterAuth.oauth.get(
     twitterAuth.buildSearchUrl(key, 'recent'),
     twitterAuth.access_token_key,
@@ -20,6 +19,7 @@ const getTwitters = async (key: string, callback: Function) => {
     callback
   );
 };
+
 const callbackTwitterResponse = () => {};
 
 class TwitterController {
@@ -44,40 +44,27 @@ class TwitterController {
     await getTwitters(
       key,
       (error: object, data: string, response: IncomingMessage) => {
-        console.log('1');
         if (error) res.status(400).json({ error: 'Error Twitter Api' });
         twitters = JSON.parse(data);
-        console.log('2');
 
         twitters?.statuses.forEach(async twitter => {
           const document = {
             content: twitter.text,
             type: 'PLAIN_TEXT',
           };
-          //console.log('document', document);
 
           // Detects the sentiment of the text
           const [result] = await googleNL.client.analyzeSentiment({
             document: document,
           });
 
-          //console.log('result', result);
-
           sentiments.push(result.sentiment);
 
-          //console.log('sentiments', sentiments);
         });
         console.log('sentiments', sentiments);
       }
     );
 
-    console.log('twitters 2', twitters);
-
-    //   sentiments.push(result.sentiment);
-    // });
-
-    // console.log('sentiments', sentiments);
-    // res.status(200).json(sentiments);
 
     //console.log(`Text: ${text}`);
     //console.log(`Sentiment score: ${sentiment.score}`);
