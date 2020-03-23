@@ -19,6 +19,7 @@ const getTwitters = async (key: string, callback: Function) => {
     callback
   );
 };
+
 const callbackTwitterResponse = () => {};
 
 class TwitterController {
