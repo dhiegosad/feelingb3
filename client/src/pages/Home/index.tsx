@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import api from '../../services/api';
-import { loadTweetsRequest } from '../../store/modules/twitter/action';
-import { ITwitterSearchUser } from '../../store/modules/twitter/types';
-import { ApplicationState } from '../../store';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import api from "../../services/api";
+import { loadTweetsRequest } from "../../store/modules/twitter/action";
+import { ITwitterSearchUser } from "../../store/modules/twitter/types";
+import { ApplicationState } from "../../store";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -12,14 +12,14 @@ const Home = () => {
     ITwitterSearchUser
   >(state => state.twitter.data);
 
-  const [subject, setSubject] = useState<string>('');
+  const [subject, setSubject] = useState<string>("");
 
   const getTwitters = () => {
     dispatch(loadTweetsRequest(subject));
   };
 
   // const getFeeling = () => {
-  //   api.get<any>(`/google/analyze/${subject}`).then(response => {
+  //   api.get<any>(`/google/analyze/`).then(response => {
   //     //setTwitters(response.data);
   //   });
   // };

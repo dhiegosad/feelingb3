@@ -1,7 +1,7 @@
-import twitterAuth from '../services/twitterAuth';
-import googleNL from '../services/googleNL';
-import { IncomingMessage } from 'http';
-import { Request, Response } from 'express';
+import twitterAuth from "../services/twitterAuth";
+import { IncomingMessage } from "http";
+import { Request, Response } from "express";
+import kafkaProducer, { KafkaProducerRequest } from "../services/kafkaProducer";
 
 interface ITwitters {
   statuses: ITwitterStatuses[];
@@ -12,9 +12,8 @@ interface ITwitterStatuses {
 }
 
 const getTwitters = async (key: string, callback: Function) => {
-  console.log('AKIIII');
   await twitterAuth.oauth.get(
-    twitterAuth.buildSearchUrl(key, 'recent'),
+    twitterAuth.buildSearchUrl(key, "recent"),
     twitterAuth.access_token_key,
     twitterAuth.access_token_secret,
     callback
@@ -29,59 +28,20 @@ class TwitterController {
     await getTwitters(
       key,
       (error: object, data: string, response: IncomingMessage) => {
-        if (error) res.status(400).json({ error: 'Error Twitter Api' });
-        res.status(200).json(JSON.parse(data));
+        if (error) res.status(400).json({ error: "Error Twitter Api" });
+
+        const responseData = JSON.parse(data);
+
+        const payload: KafkaProducerRequest = {
+          topic: kafkaProducer.KAFKA_TOPIC_NAME,
+          messages: data
+        };
+
+        kafkaProducer.publish(payload);
+
+        res.status(200).json(responseData);
       }
     );
-  }
-
-  async analyze(req: Request, res: Response) {
-    const { key } = req.params;
-
-    let twitters: ITwitters;
-    var sentiments: Array<string> = [];
-
-    await getTwitters(
-      key,
-      (error: object, data: string, response: IncomingMessage) => {
-        console.log('1');
-        if (error) res.status(400).json({ error: 'Error Twitter Api' });
-        twitters = JSON.parse(data);
-        console.log('2');
-
-        twitters?.statuses.forEach(async twitter => {
-          const document = {
-            content: twitter.text,
-            type: 'PLAIN_TEXT',
-          };
-          //console.log('document', document);
-
-          // Detects the sentiment of the text
-          const [result] = await googleNL.client.analyzeSentiment({
-            document: document,
-          });
-
-          //console.log('result', result);
-
-          sentiments.push(result.sentiment);
-
-          //console.log('sentiments', sentiments);
-        });
-        console.log('sentiments', sentiments);
-      }
-    );
-
-    console.log('twitters 2', twitters);
-
-    //   sentiments.push(result.sentiment);
-    // });
-
-    // console.log('sentiments', sentiments);
-    // res.status(200).json(sentiments);
-
-    //console.log(`Text: ${text}`);
-    //console.log(`Sentiment score: ${sentiment.score}`);
-    //console.log(`Sentiment magnitude: ${sentiment.magnitude}`);
   }
 }
 
