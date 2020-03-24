@@ -5,7 +5,12 @@ import { TwitterTypes } from './types';
 
 export function* callapi({ payload }: any) {
   const { subject } = payload;
-  const response = yield call(api.get, `/search/${subject}`);
+
+  const response = yield call(api.get, `/search`, {
+    params: {
+      key: subject,
+    },
+  });
 
   yield put(loadTweetsSuccess(response.data));
 }

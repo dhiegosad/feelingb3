@@ -6,6 +6,7 @@ import kafka, {
   Offset,
 } from 'kafka-node';
 import googleNL from '../services/googleNL';
+import { Tweet } from '../models/Tweet';
 
 class KafkaConsumer {
   private client: Client;
@@ -30,9 +31,8 @@ class KafkaConsumer {
 
     this.consumer.on('message', function(message: any): void {
       if (message) {
-        const msg = JSON.parse(message.value);
-        googleNL.analize([msg.statuses[0].text]);
-        console.log('message', msg.statuses[0].text);
+        const msg: Tweet = JSON.parse(message.value);
+        googleNL.analize(msg);
       }
     });
 
