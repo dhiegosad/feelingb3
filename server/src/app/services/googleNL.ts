@@ -33,11 +33,10 @@ class GoogleNL {
   convertScore(sentence: Sentence) {
     const enhancedSentiment = { ...sentence };
     enhancedSentiment.sentiment.value = toSentiment(sentence.sentiment.score);
-    console.log('teste', enhancedSentiment);
     return sentence;
   }
 
-  buildAndGetSentiments(analizedTweets: Array<object>) {
+  buildAndGetSentiments(analizedTweets: Array<object>): Array<Sentence> {
     let sentences: Array<Sentence> = [];
 
     analizedTweets.forEach(analizedTweet => {
@@ -45,8 +44,6 @@ class GoogleNL {
         sentences.push(this.convertScore(sentence));
       });
     });
-
-    this.computeTotalSentiment(sentences);
 
     return sentences;
   }
@@ -66,7 +63,7 @@ class GoogleNL {
         })
       );
     }
-    this.buildAndGetSentiments(results);
+    this.computeTotalSentiment(this.buildAndGetSentiments(results));
   }
 }
 

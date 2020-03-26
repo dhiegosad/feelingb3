@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import api from '../../services/api';
 import { loadTweetsRequest } from '../../store/modules/twitter/action';
 import { ITwitterSearchUser } from '../../store/modules/twitter/types';
 import { ApplicationState } from '../../store';
