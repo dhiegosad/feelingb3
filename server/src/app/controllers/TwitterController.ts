@@ -7,7 +7,7 @@ class TwitterController {
   private URL_SEARCH_TWITTER = process.env.URL_SEARCH_TWITTER;
 
   buildSearchUrl = (key: string, resultType = 'recent'): string => {
-    return `${this.URL_SEARCH_TWITTER}?q=${key}&result_type=${resultType}&lang=pt`;
+    return `${this.URL_SEARCH_TWITTER}?q=${key}&result_type=${resultType}&lang=pt&count=50`;
   };
 
   getTwitters = async (key: string, callback: Function) => {

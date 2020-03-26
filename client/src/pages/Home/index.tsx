@@ -5,6 +5,8 @@ import { loadTweetsRequest } from '../../store/modules/twitter/action';
 import { ITwitterSearchUser } from '../../store/modules/twitter/types';
 import { ApplicationState } from '../../store';
 
+import { Container, Button, Input, IssueList } from './styles';
+
 const Home = () => {
   const dispatch = useDispatch();
   const twitters: ITwitterSearchUser = useSelector<
@@ -18,12 +20,6 @@ const Home = () => {
     dispatch(loadTweetsRequest(subject));
   };
 
-  const getFeeling = () => {
-    api.get<any>(`/google/analyze/`).then(response => {
-      //setTwitters(response.data);
-    });
-  };
-
   const handleInputChange = (event: {
     target: { value: React.SetStateAction<string> };
   }) => {
@@ -31,16 +27,23 @@ const Home = () => {
   };
 
   return (
-    <div>
-      <input type="text" onChange={handleInputChange} />
-      <button onClick={getTwitters}>Send</button>
-      <button onClick={getFeeling}>Analyze</button>
-      {twitters?.statuses.map(twitter => (
-        <div key={twitter.id}>
-          <p>{twitter.text}</p>
-        </div>
-      ))}
-    </div>
+    <Container>
+      <h1>Natural Language - Sentiment Analysis</h1>
+      <Input
+        type="text"
+        onChange={handleInputChange}
+        placeholder="Looking for..."
+      />
+      <Button onClick={getTwitters}>Get Tweets</Button>
+      {/* <button onClick={getFeeling}>Analyze</button> */}
+      <IssueList>
+        {twitters?.statuses.map(twitter => (
+          <div key={twitter.id}>
+            <li>{twitter.text}</li>
+          </div>
+        ))}
+      </IssueList>
+    </Container>
   );
 };
 
