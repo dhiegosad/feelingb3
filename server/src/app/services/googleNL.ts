@@ -1,6 +1,7 @@
 import language from '@google-cloud/language';
 import { Tweet } from '../models/Tweet';
-import { Sentiment } from '../models/Sentiment';
+import { Sentence } from '../models/Sentence';
+import { toSentiment } from '../models/SentimentEnum';
 
 class GoogleNL {
   private client;
@@ -9,9 +10,49 @@ class GoogleNL {
     this.client = new language.LanguageServiceClient();
   }
 
+  computeTotalSentiment(sentences: Array<Sentence>) {
+    let totalScore: number = 0;
+    let totalSentences: number = 0;
+    sentences.forEach(sentence => {
+      if (sentence.sentiment.score != 0) {
+        console.log('sentence.sentiment.score', sentence.sentiment.score);
+        totalScore += sentence.sentiment.score;
+        totalSentences++;
+      }
+    });
+
+    console.log(
+      'SENTIMENTO:',
+      totalScore,
+      totalSentences,
+      totalScore / totalSentences,
+      toSentiment(totalScore / totalSentences)
+    );
+  }
+
+  convertScore(sentence: Sentence) {
+    const enhancedSentiment = { ...sentence };
+    enhancedSentiment.sentiment.value = toSentiment(sentence.sentiment.score);
+    console.log('teste', enhancedSentiment);
+    return sentence;
+  }
+
+  buildAndGetSentiments(analizedTweets: Array<object>) {
+    let sentences: Array<Sentence> = [];
+
+    analizedTweets.forEach(analizedTweet => {
+      analizedTweet[0].sentences.forEach((sentence: Sentence) => {
+        sentences.push(this.convertScore(sentence));
+      });
+    });
+
+    this.computeTotalSentiment(sentences);
+
+    return sentences;
+  }
+
   async analize(tweet: Tweet) {
-    let results: Array<any> = [];
-    let sentiments: Array<Sentiment> = [];
+    let results: Array<object> = [];
 
     for (const value of tweet?.statuses) {
       const document = {
@@ -25,16 +66,7 @@ class GoogleNL {
         })
       );
     }
-
-    results.forEach(result => {
-      console.log('AKI', result[0].sentences);
-      // sentiments.push({
-      //   text: result[0]?.sentences?.text?.content,
-      //   sentiment: result[0]?.sentences?.sentiment,
-      // });
-    });
-
-    //console.log('result', sentiments);
+    this.buildAndGetSentiments(results);
   }
 }
 
