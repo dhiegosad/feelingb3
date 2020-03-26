@@ -13,9 +13,9 @@ class KafkaConsumer {
   private topics: OffsetFetchRequest[];
   private options: ConsumerOptions;
   private kafkaHost: string = process.env.KAFKA_SERVER;
-  public consumer: Consumer;
-  public offset: Offset;
-  public KAFKA_TOPIC_NAME: string = process.env.KAFKA_TOPIC;
+  private consumer: Consumer;
+  private offset: Offset;
+  private KAFKA_TOPIC_NAME: string = process.env.KAFKA_TOPIC;
 
   constructor() {
     this.client = new Client({ kafkaHost: this.kafkaHost });

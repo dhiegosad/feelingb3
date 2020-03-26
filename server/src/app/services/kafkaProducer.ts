@@ -14,7 +14,7 @@ export interface KafkaProducerRequest {
 class KafkaProducer {
   private client: Client;
   private kafkaHost: string = process.env.KAFKA_SERVER;
-  public producer: Producer;
+  private producer: Producer;
   public KAFKA_TOPIC_NAME: string = process.env.KAFKA_TOPIC;
 
   constructor() {
