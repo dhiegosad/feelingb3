@@ -6,9 +6,9 @@ import kafkaProducer, { KafkaProducerRequest } from '../services/kafkaProducer';
 class TwitterController {
   private URL_SEARCH_TWITTER = process.env.URL_SEARCH_TWITTER;
 
-  buildSearchUrl(key: string, resultType = 'recent'): string {
-    return `${this.URL_SEARCH_TWITTER}?q=${key}&result_type=${resultType}`;
-  }
+  buildSearchUrl = (key: string, resultType = 'recent'): string => {
+    return `${this.URL_SEARCH_TWITTER}?q=${key}&result_type=${resultType}&lang=pt`;
+  };
 
   getTwitters = async (key: string, callback: Function) => {
     await twitterAuth.oauth.get(
@@ -19,7 +19,7 @@ class TwitterController {
     );
   };
 
-  async request(req: Request, res: Response) {
+  request = async (req: Request, res: Response) => {
     const { key } = req.query;
 
     await this.getTwitters(
@@ -39,7 +39,7 @@ class TwitterController {
         res.status(200).json(responseData);
       }
     );
-  }
+  };
 }
 
 export default new TwitterController();
