@@ -1,7 +1,7 @@
-// Twitter Types
+// Sentiments Types
 export enum SentimentsTypes {
-  LOAD_SENTIMENTS_REQUEST = '@sentiment/LOAD_SENTIMENTS_REQUEST',
-  LOAD_SENTIMENTS_SUCCESS = '@sentiment/LOAD_SENTIMENTS_SUCCESS',
+  LOAD_SENTIMENTS_REQUEST = "@sentiment/LOAD_SENTIMENTS_REQUEST",
+  LOAD_SENTIMENTS_SUCCESS = "@sentiment/LOAD_SENTIMENTS_SUCCESS"
 }
 
 export interface LoadSentimentsRequestAction {
@@ -25,11 +25,11 @@ export interface ISentiment {
 }
 
 export enum SentimentEnum {
-  'Péssimo',
-  'Ruim',
-  'Neutro',
-  'Bom',
-  'Ótimo',
+  "Péssimo",
+  "Ruim",
+  "Neutro",
+  "Bom",
+  "Ótimo"
 }
 
 // State Type
