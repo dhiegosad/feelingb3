@@ -7,12 +7,12 @@ class TwitterController {
   private URL_SEARCH_TWITTER = process.env.URL_SEARCH_TWITTER;
 
   buildSearchUrl = (key: string, resultType = 'recent'): string => {
-    return `${this.URL_SEARCH_TWITTER}?q=${key}&result_type=${resultType}&lang=pt&count=50`;
+    return `${this.URL_SEARCH_TWITTER}?q=${key}&include_entities=1&result_type=${resultType}&lang=pt&count=70`;
   };
 
   getTwitters = async (key: string, callback: Function) => {
     await twitterAuth.oauth.get(
-      this.buildSearchUrl(key, 'recent'),
+      this.buildSearchUrl(key, 'mixed'),
       twitterAuth.access_token_key,
       twitterAuth.access_token_secret,
       callback

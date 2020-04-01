@@ -1,7 +1,7 @@
 import language from '@google-cloud/language';
 import { Tweet } from '../models/Tweet';
 import { Sentence } from '../models/Sentence';
-import { toSentiment } from '../models/SentimentEnum';
+import SentimentSchema from '../schemas/SentimentSchema';
 
 class GoogleNL {
   private client;
@@ -10,38 +10,18 @@ class GoogleNL {
     this.client = new language.LanguageServiceClient();
   }
 
-  computeTotalSentiment(sentences: Array<Sentence>) {
-    let totalScore: number = 0;
-    let totalSentences: number = 0;
-    sentences.forEach(sentence => {
-      if (sentence.sentiment.score != 0) {
-        console.log('sentence.sentiment.score', sentence.sentiment.score);
-        totalScore += sentence.sentiment.score;
-        totalSentences++;
-      }
-    });
-
-    console.log(
-      'SENTIMENTO:',
-      totalScore,
-      totalSentences,
-      totalScore / totalSentences,
-      toSentiment(totalScore / totalSentences)
-    );
-  }
-
-  convertScore(sentence: Sentence) {
-    const enhancedSentiment = { ...sentence };
-    enhancedSentiment.sentiment.value = toSentiment(sentence.sentiment.score);
-    return sentence;
-  }
-
-  buildAndGetSentiments(analizedTweets: Array<object>): Array<Sentence> {
+  buildAndSaveSentiments(analizedTweets: Array<object>): Array<Sentence> {
     let sentences: Array<Sentence> = [];
 
     analizedTweets.forEach(analizedTweet => {
-      analizedTweet[0].sentences.forEach((sentence: Sentence) => {
-        sentences.push(this.convertScore(sentence));
+      analizedTweet[0].sentences.forEach(async (sentence: Sentence) => {
+        await SentimentSchema.create({
+          tweet: sentence.text.content,
+          score: sentence.sentiment.score,
+          magnitude: sentence.sentiment.magnitude,
+        });
+
+        sentences.push(sentence);
       });
     });
 
@@ -63,7 +43,7 @@ class GoogleNL {
         })
       );
     }
-    this.computeTotalSentiment(this.buildAndGetSentiments(results));
+    this.buildAndSaveSentiments(results);
   }
 }
 

@@ -1,10 +1,10 @@
-interface Sentiment {
-  score: number;
-  maginitude: number;
-  value: string;
+import { ISentiment } from './Sentiment';
+
+interface ITweetValue {
+  content: string;
 }
 
 export interface Sentence {
-  text: object;
-  sentiment: Sentiment;
+  text: ITweetValue;
+  sentiment: ISentiment;
 }

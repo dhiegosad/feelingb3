@@ -22,7 +22,7 @@ class KafkaProducer {
     this.producer = new Producer(this.client);
   }
 
-  publish = (data: KafkaProducerRequest) => {
+  publish = async (data: KafkaProducerRequest) => {
     this.producer.send(
       [{ topic: data.topic, messages: data.messages }],
       (err: Error, result: ProduceRequest): void => {

@@ -36,4 +36,5 @@ export interface ITwitterStatus {
 // State Type
 export interface TwitterState {
   readonly data: ITwitterSearchUser;
+  loading: boolean;
 }

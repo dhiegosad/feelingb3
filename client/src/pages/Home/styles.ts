@@ -3,7 +3,7 @@ import { darken, lighten } from 'polished';
 
 export const Container = styled.div`
   max-width: 900px;
-  margin: 50px auto;
+  margin: 20px auto;
   display: flex;
   flex-direction: column;
 
@@ -25,7 +25,7 @@ export const Container = styled.div`
   ul {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-gap: 15px;
+    grid-gap: 20px;
     margin-top: 30px;
   }
 `;
@@ -43,9 +43,9 @@ export const Input = styled.input`
 `;
 
 export const Button = styled.button`
-  margin-top: 40px;
-  width: 120px;
-  height: 40px;
+  margin-top: 30px;
+  width: 200px;
+  height: 45px;
   border-radius: 5px;
   border: none;
   background: #eb0045;
@@ -62,18 +62,54 @@ export const Button = styled.button`
   cursor: pointer;
 `;
 
+export const SentimentResult = styled.h1`
+  padding-top: 20px;
+  font-size: 25px;
+  color: ${lighten(0.3, '#000')};
+  font-weight: bold;
+`;
+
+export const FieldGroup = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 0 20px;
+`;
+
+export const ScoreText = styled.h4`
+  margin-top: 5px;
+  font-size: 15px;
+  color: #eb0045;
+`;
+
+export const Title = styled.h1`
+  text-align: center;
+  font-size: 30px;
+  color: ${lighten(0.3, '#000')};
+`;
+
+export const LodingField = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
 export const IssueList = styled.ul`
-  padding-top: 30px;
+  padding-top: 10px;
   margin-top: 10px;
-  border-top: 1px solid #eee;
+  border-top: none;
   list-style: none;
+  justify-content: space-between;
+  width: 900px;
+  padding-inline-start: 20px;
 
   li {
     display: flex;
-    padding: 15px 10px;
-    border: 1px solid #eee;
+    padding: 10px 10px;
+    border: 1px solid #eb0045;
     margin-top: 5px;
     border-radius: 4px;
+    background: #fff;
+    flex-direction: column;
+    min-height: 115px;
   }
 
   & + li {
@@ -82,8 +118,6 @@ export const IssueList = styled.ul`
 
   div {
     flex: 1;
-    margin-left: 15px;
-
     strong {
       font-size: 15px;
 
@@ -99,8 +133,8 @@ export const IssueList = styled.ul`
 
     p {
       margin-top: 5px;
-      font-size: 12px;
-      color: #999;
+      font-size: 15px;
+      color: ${lighten(0.3, '#000')};
     }
   }
 `;

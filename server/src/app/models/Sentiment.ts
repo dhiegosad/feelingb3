@@ -1,4 +1,5 @@
-export interface Sentiment {
-  text: object;
-  sentiment: object;
+export interface ISentiment {
+  score: number;
+  magnitude: number;
+  value: string;
 }
